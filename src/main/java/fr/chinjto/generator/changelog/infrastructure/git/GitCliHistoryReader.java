@@ -47,7 +47,7 @@ public final class GitCliHistoryReader implements GitHistoryReader {
             return List.of();
         }
         return Arrays.stream(output.split("\\R"))
-                .filter(message -> !message.isBlank())
+                .filter(GitCliHistoryReader::isVisibleCommit)
                 .map(GitCommit::new)
                 .toList();
     }
@@ -64,9 +64,16 @@ public final class GitCliHistoryReader implements GitHistoryReader {
         }
 
         return Arrays.stream(output.split("\\R"))
-                .filter(message -> !message.isBlank())
+                .filter(GitCliHistoryReader::isVisibleCommit)
                 .map(GitCommit::new)
                 .toList();
+    }
+
+    private static boolean isVisibleCommit(final String message) {
+        return !message.isBlank()
+                && !message.matches("^chore\\(release\\): Release v\\d+\\.\\d+\\.\\d+$")
+                && !message.matches("^chore\\(snapshot\\): Open v\\d+\\.\\d+\\.\\d-SNAPSHOT+$")
+                && !message.matches("^Merge branch '[^']+'$");
     }
 
     private static String runGit(final Path repository, final String... arguments) {
