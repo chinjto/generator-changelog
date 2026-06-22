@@ -6,7 +6,7 @@ MVN ?= mvn
 
 include ~/.make/git.mk
 
-.PHONY: build clean run test version
+.PHONY: build clean run test test-cli test-contract test-infrastructure test-tdd test-tu test-unit version
 
 build:
 	$(MVN) clean package
@@ -16,6 +16,22 @@ run:
 
 test:
 	$(MVN) test
+
+test-cli:
+	$(MVN) test -Dgroups=cli
+
+test-contract:
+	$(MVN) test -Dgroups=contract
+
+test-infrastructure:
+	$(MVN) test -Dgroups=infrastructure
+
+test-tdd: test-contract
+
+test-tu: test-unit
+
+test-unit:
+	$(MVN) test -Dgroups=unit
 
 clean:
 	$(MVN) clean
