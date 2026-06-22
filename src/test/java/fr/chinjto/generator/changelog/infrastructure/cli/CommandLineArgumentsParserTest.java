@@ -28,8 +28,6 @@ final class CommandLineArgumentsParserTest {
         });
 
         assertEquals(Path.of("/workspace/project"), request.repository());
-        assertEquals("v1.0.0", request.fromRelease());
-        assertEquals("v1.1.0", request.toRelease());
         assertEquals(Path.of("build/changelog.md"), request.output());
     }
 
@@ -38,10 +36,10 @@ final class CommandLineArgumentsParserTest {
     void rejectsMissingRequiredOptionsWithReadableMessage() {
         final IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> parser.parse(new String[]{"--repo", ".", "--from", "v1.0.0", "--output", "changelog.md"})
+                () -> parser.parse(new String[]{"--output", "changelog.md"})
         );
 
-        assertTrue(exception.getMessage().contains("--to"));
+        assertTrue(exception.getMessage().contains("--repo"));
     }
 
     @Test

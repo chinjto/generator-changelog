@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class CommandLineArgumentsParser {
-    private static final Set<String> REQUIRED_OPTIONS = Set.of("--repo", "--from", "--to", "--output");
+    private static final Set<String> REQUIRED_OPTIONS = Set.of("--repo", "--output");
 
     public ChangelogRequest parse(final String[] arguments) {
         final Map<String, String> options = parseOptions(arguments);
@@ -16,8 +16,6 @@ public final class CommandLineArgumentsParser {
 
         return new ChangelogRequest(
                 Path.of(options.get("--repo")),
-                options.get("--from"),
-                options.get("--to"),
                 Path.of(options.get("--output"))
         );
     }
