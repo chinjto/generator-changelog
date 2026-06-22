@@ -10,7 +10,7 @@ else ifneq ($(filter release,$(MAKECMDGOALS)),release)
 include ~/.make/git.mk
 endif
 
-.PHONY: build clean release run snapshot test test-cli test-contract test-infrastructure test-tdd test-tu test-unit version
+.PHONY: build clean release run snapshot test test-cli test-contract test-infrastructure test-tdd test-tu test-unit version install
 
 build:
 	$(MVN) clean package
@@ -67,3 +67,6 @@ ifndef VERSION
 endif
 	$(MVN) versions:set -DnewVersion=$(VERSION)
 	$(MVN) versions:commit
+
+install: build
+	./.scripts/install.sh
