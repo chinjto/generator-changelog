@@ -6,6 +6,7 @@ import fr.chinjto.generator.changelog.infrastructure.cli.CommandLineArgumentsPar
 import fr.chinjto.generator.changelog.infrastructure.git.GitCliHistoryReader;
 import fr.chinjto.generator.changelog.infrastructure.markdown.MarkdownChangelogRenderer;
 import fr.chinjto.generator.changelog.infrastructure.markdown.MarkdownChangelogWriter;
+import fr.chinjto.generator.changelog.infrastructure.maven.MavenVersionReader;
 
 public final class GeneratorChangelogApplication {
     private GeneratorChangelogApplication() {
@@ -15,6 +16,7 @@ public final class GeneratorChangelogApplication {
         final ChangelogRequest request = new CommandLineArgumentsParser().parse(args);
         new ChangelogGenerator(
                 new GitCliHistoryReader(),
+                new MavenVersionReader(),
                 new MarkdownChangelogRenderer(),
                 new MarkdownChangelogWriter()
         ).generate(request);
