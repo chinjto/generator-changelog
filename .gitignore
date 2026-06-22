@@ -8,4 +8,11 @@
 .DS_Store
 Thumbs.db
 
-../latex/.env
+# Java build outputs
+target/
+*.class
+*.jar
+
+# Local configuration
+*.local
+.env
