@@ -9,43 +9,41 @@ BIN_ROOT=${BIN_ROOT:-"$HOME/.local/bin"}
 ARTIFACT_ID=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='artifactId'])" "$PROJECT_ROOT/pom.xml")
 GENERATOR_NAME=${ARTIFACT_ID#generator-}
 
-LATEST_TAG=$(git -C "$PROJECT_ROOT" tag --sort=-v:refname | head -n 1)
-
-if [ -z "$LATEST_TAG" ]; then
-    echo "No Git tag found. Unable to install latest version." >&2
+if [ -z "${JAVA_HOME:-}" ]; then
+    echo "JAVA_HOME is not configured." >&2
+    echo "Run install through 'make install' so .env is loaded by Make." >&2
     exit 1
 fi
 
-CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" symbolic-ref --quiet --short HEAD || true)
-CURRENT_COMMIT=$(git -C "$PROJECT_ROOT" rev-parse HEAD)
+if [ ! -x "$JAVA_HOME/bin/java" ]; then
+    echo "JAVA_HOME does not point to a valid JDK/JRE: $JAVA_HOME" >&2
+    echo "Expected executable: $JAVA_HOME/bin/java" >&2
+    exit 1
+fi
 
-cleanup() {
-    if [ -n "$CURRENT_BRANCH" ]; then
-        git -C "$PROJECT_ROOT" checkout "$CURRENT_BRANCH" >/dev/null 2>&1 || true
-    else
-        git -C "$PROJECT_ROOT" checkout "$CURRENT_COMMIT" >/dev/null 2>&1 || true
-    fi
-}
+JAR_FILE=$(find "$PROJECT_ROOT/target" -maxdepth 1 -type f -name "$ARTIFACT_ID-*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" | head -n 1)
 
-trap cleanup EXIT INT TERM
-
-echo "Installing $ARTIFACT_ID from latest tag: $LATEST_TAG"
-
-git -C "$PROJECT_ROOT" checkout "$LATEST_TAG" >/dev/null 2>&1
-
-make -C "$PROJECT_ROOT" build
-"$PROJECT_ROOT/.scripts/deploy.sh"
+if [ -z "$JAR_FILE" ]; then
+    echo "No jar found for artifact '$ARTIFACT_ID' in target/." >&2
+    echo "Run 'make build' before install, or configure 'install: build' in the Makefile." >&2
+    exit 1
+fi
 
 mkdir -p "$DEPLOY_ROOT"
+mkdir -p "$BIN_ROOT"
+
+cp "$JAR_FILE" "$DEPLOY_ROOT/$GENERATOR_NAME.jar"
 
 cat > "$DEPLOY_ROOT/$GENERATOR_NAME" <<EOF
 #!/usr/bin/env sh
-exec java -jar "$DEPLOY_ROOT/$GENERATOR_NAME.jar" "\$@"
+set -eu
+
+JAVA_HOME="$JAVA_HOME"
+
+exec "\$JAVA_HOME/bin/java" -jar "$DEPLOY_ROOT/$GENERATOR_NAME.jar" "\$@"
 EOF
 
 chmod +x "$DEPLOY_ROOT/$GENERATOR_NAME"
-
-mkdir -p "$BIN_ROOT"
 
 ln -sf \
     "$DEPLOY_ROOT/$GENERATOR_NAME" \
@@ -54,6 +52,7 @@ ln -sf \
 echo "Installed jar:      $DEPLOY_ROOT/$GENERATOR_NAME.jar"
 echo "Installed launcher: $DEPLOY_ROOT/$GENERATOR_NAME"
 echo "Installed command:  $BIN_ROOT/$GENERATOR_NAME"
+echo "Using Java:         $JAVA_HOME/bin/java"
 
 case ":$PATH:" in
     *":$BIN_ROOT:"*)
@@ -62,12 +61,9 @@ case ":$PATH:" in
     *)
         echo
         echo "WARNING: $BIN_ROOT is not present in PATH."
-        echo
-        echo "Add the following line to your shell configuration:"
+        echo "Add this line to your shell configuration:"
         echo
         echo "export PATH=\"$BIN_ROOT:\$PATH\""
-        echo
-        echo "Then reload your shell."
         ;;
 esac
 
