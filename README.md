@@ -38,6 +38,7 @@ make test-contract
 make test-unit
 make clean
 make version VERSION=0.2.0
+make snapshot VERSION=0.3.0
 ```
 
 - `make build` generates the executable jar in `target/`
@@ -47,6 +48,7 @@ make version VERSION=0.2.0
 - `make test-unit` runs unit tests
 - `make clean` removes Maven build outputs
 - `make version VERSION=x.y.z` updates the `pom.xml` version through Maven
+- `make snapshot VERSION=x.y.z` opens the next development version as `x.y.z-SNAPSHOT`
 
 Additional targeted test aliases are available:
 
@@ -55,7 +57,16 @@ Additional targeted test aliases are available:
 - `make test-tdd` aliases `make test-contract`
 - `make test-tu` aliases `make test-unit`
 
-Generic Git, release, and deploy commands come from `~/.make/git.mk`, provided by the local `toolbox-make` repository.
+`make release VERSION=x.y.z` delegates the release flow to `toolbox-make` and then opens the next snapshot automatically. The next snapshot increments the second version digit and resets the patch digit to `0`.
+
+Example:
+
+```text
+make release VERSION=0.2.0
+opens 0.3.0-SNAPSHOT after tagging v0.2.0
+```
+
+Generic Git and deploy commands come from `~/.make/git.mk`, provided by the local `toolbox-make` repository. The local `release` goal wraps that toolbox flow to open the next snapshot after the release has completed.
 
 The executable jar accepts the following options:
 
