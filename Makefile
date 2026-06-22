@@ -1,12 +1,28 @@
 include .env
 export
 
-DEPLOY_SCRIPT = echo "Undefined deploy script for this project."
+DEPLOY_SCRIPT = ./.scripts/deploy.sh
+MVN ?= mvn
 
 include ~/.make/git.mk
 
+.PHONY: build clean run test version
+
 build:
-	echo "Undefined goal 'build' for this project."
+	$(MVN) clean package
+
+run:
+	java -jar target/*.jar
+
+test:
+	$(MVN) test
+
+clean:
+	$(MVN) clean
 
 version:
-	echo "Undefined goal 'version' for this project."
+ifndef VERSION
+	$(error VERSION is required. Usage: make version VERSION=0.2.0)
+endif
+	$(MVN) versions:set -DnewVersion=$(VERSION)
+	$(MVN) versions:commit
