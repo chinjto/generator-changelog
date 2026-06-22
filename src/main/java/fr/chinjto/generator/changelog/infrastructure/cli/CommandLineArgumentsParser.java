@@ -16,7 +16,8 @@ public final class CommandLineArgumentsParser {
 
         return new ChangelogRequest(
                 Path.of(options.get("--repo")),
-                Path.of(options.get("--output"))
+                Path.of(options.get("--output")),
+                options.get("--release")
         );
     }
 
