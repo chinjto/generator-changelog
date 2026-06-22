@@ -69,4 +69,4 @@ esac
 
 echo
 echo "Run with:"
-echo "  $GENERATOR_NAME --repo . --from v1.0.0 --to v1.1.0 --output CHANGELOG.md"
+echo "  $GENERATOR_NAME --repo . --output CHANGELOG.md"
