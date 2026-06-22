@@ -42,7 +42,7 @@ final class GeneratorChangelogApplicationTest {
         assertTrue(markdown.contains("# Changelog"), "Expected the output file to start a Markdown changelog.");
 
         assertTrue(markdown.contains("## v1.2.0"), "Expected current Maven snapshot version to be used as next release section.");
-        assertTrue(markdown.contains("feat: start next release"), "Expected commits after the latest tag to appear in current release section.");
+        assertTrue(markdown.contains("feat: start next release"), "Expected gitHistory after the latest tag to appear in current release section.");
 
         assertTrue(markdown.contains("## v1.1.0"), "Expected v1.1.0 release section.");
         assertTrue(markdown.contains("feat: add markdown changelog output"), "Expected v1.1.0 feature commit.");

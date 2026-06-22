@@ -16,9 +16,15 @@
         <maven.compiler.release>26</maven.compiler.release>
         <main.class>fr.chinjto.generator.changelog.GeneratorChangelogApplication</main.class>
         <junit.version>6.0.3</junit.version>
+        <maven-model.version>3.9.16</maven-model.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>${maven-model.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
