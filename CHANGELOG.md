@@ -1,9 +1,14 @@
 # Changelog
 
+## v1.5.0
+
+- feat(release): Customize new release
+
 ## v1.4.0
 
 - fix(changelog): Correct a few omissions
 - fix(changelog): Filter releases commits
+- chore(changelog) Publish v1.4.0
 
 ## v1.3.0
 
