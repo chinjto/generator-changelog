@@ -31,8 +31,11 @@ public final class ChangelogGenerator {
     }
 
     public void generate(final ChangelogRequest request) {
-        // Détecte la version courante du projet
-        final ProjectVersion currentVersion = projectVersionReader.read(request.repository());
+
+        // Détecte la version de la prochaine release
+        final ProjectVersion currentVersion = request.release() == null
+                ? projectVersionReader.read(request.repository())
+                : new ProjectVersion(request.release());
 
         // Récupère l'ensemble de l'historique Git
         final GitHistory gitHistory = gitHistoryReader.read(request.repository());

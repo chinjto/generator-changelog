@@ -106,10 +106,11 @@ The generator can then be executed directly:
 ```shell
 changelog \
   --repo /path/to/repository \
-  --output /path/to/changelog.md
+  --output /path/to/changelog.md \
+  [--release x.y.z]
 ```
 
-Example:
+Examples:
 
 ```shell
 changelog \
@@ -117,12 +118,20 @@ changelog \
   --output CHANGELOG.md
 ```
 
+```shell
+changelog \
+  --repo . \
+  --output CHANGELOG.md \
+  --release 1.2.3
+```
+
 ### Arguments
 
-| Argument | Required | Description |
-|-----------|----------|-------------|
-| `--repo` | Yes | Path to the Git repository to analyse. |
-| `--output` | Yes | Target Markdown file to generate. The file must use the `.md` extension. |
+| Argument    | Required | Description                                                                    |
+|-------------|----------|--------------------------------------------------------------------------------|
+| `--repo`    | Yes      | Path to the Git repository to analyse.                                         |
+| `--output`  | Yes      | Target Markdown file to generate. The file must use the `.md` extension.       |
+| `--release` | No       | Target release generate. If not setted, replaced by the Maven project release. |
 
 ### Validation rules
 

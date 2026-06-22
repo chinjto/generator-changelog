@@ -101,6 +101,40 @@ final class GeneratorChangelogApplicationTest {
         assertTrue(markdown.contains("## v1.0.0"), "Expected regenerated changelog content.");
     }
 
+    @Test
+    @DisplayName("custom the new release value")
+    void customTheNewReleaseValue() throws Exception {
+        final Path repository = createRepositoryWithReleaseHistory();
+        final Path output = tempDir.resolve("release-notes").resolve("CHANGELOG.md");
+        final String release = "6.6.6";
+
+        GeneratorChangelogApplication.main(new String[]{
+                "--repo", repository.toString(),
+                "--output", output.toString(),
+                "--release", release
+        });
+
+        assertTrue(Files.isRegularFile(output), "Expected a Markdown file to be generated at: " + output);
+
+        final String markdown = Files.readString(output);
+
+        assertTrue(markdown.contains("# Changelog"), "Expected the output file to start a Markdown changelog.");
+
+        assertTrue(markdown.contains("## v6.6.6"), "Expected custom version to be used as next release section.");
+        assertTrue(markdown.contains("feat: start next release"), "Expected gitHistory after the latest tag to appear in current release section.");
+
+        assertTrue(markdown.contains("## v1.1.0"), "Expected v1.1.0 release section.");
+        assertTrue(markdown.contains("feat: add markdown changelog output"), "Expected v1.1.0 feature commit.");
+        assertTrue(markdown.contains("fix: keep release range configurable"), "Expected v1.1.0 fix commit.");
+
+        assertTrue(markdown.contains("## v1.0.0"), "Expected v1.0.0 release section.");
+        assertTrue(markdown.contains("chore: bootstrap project"), "Expected initial v1.0.0 commit.");
+
+        assertFalse(markdown.contains("## Unreleased"), "Expected no Unreleased section.");
+        assertFalse(markdown.contains("SNAPSHOT"), "Expected snapshot suffix to be removed from release title.");
+    }
+
+
     @ParameterizedTest(name = "rejects command without {0}")
     @MethodSource("missingRequiredOptions")
     @DisplayName("rejects commands with missing required options")
