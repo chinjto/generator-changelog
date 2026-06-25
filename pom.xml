@@ -6,7 +6,7 @@
 
     <groupId>fr.chinjto</groupId>
     <artifactId>generator-changelog</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.6.0</version>
 
     <name>Generator Changelog</name>
     <description>Generate changelog outputs from Git history.</description>
