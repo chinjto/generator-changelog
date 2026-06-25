@@ -1,8 +1,13 @@
 # Changelog
 
+## v1.6.0
+
+- feat(filters): Exclude wip commits
+
 ## v1.5.0
 
 - feat(release): Customize new release
+- chore(changelog): Publish v1.5.0
 
 ## v1.4.0
 
