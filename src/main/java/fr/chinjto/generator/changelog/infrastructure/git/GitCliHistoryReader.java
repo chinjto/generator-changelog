@@ -73,6 +73,7 @@ public final class GitCliHistoryReader implements GitHistoryReader {
         return !message.isBlank()
                 && !message.matches("^chore\\(release\\): Release v\\d+\\.\\d+\\.\\d+$")
                 && !message.matches("^chore\\(snapshot\\): Open v\\d+\\.\\d+\\.\\d-SNAPSHOT+$")
+                && !message.matches("^wip(?:\\([^)]+\\))?: .+$")
                 && !message.matches("^Merge branch '[^']+'$");
     }
 
